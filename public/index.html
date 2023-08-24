@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    .chat-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 15px;
+      background-color: #075e54;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .chat-messages {
+      padding: 10px;
+      overflow-y: auto;
+      max-height: 400px;
+    }
+
+    .chat-input {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background-color: #ffffff;
+      border-top: 1px solid #d3d3d3;
+    }
+
+    #input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #send-button {
+      padding: 8px 15px;
+      background-color: #128c7e;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #send-button:hover {
+      background-color: #0d6e5a;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      <h1>Chat App</h1>
+    </div>
+    <div class="chat-messages" id="messages">
+      <!-- Messages will be inserted here using JavaScript -->
+    </div>
+    <div class="chat-input">
+      <form id="form" action="">
+        <input id="input" autocomplete="off" /><button type="submit" id="send-button">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const messages = document.getElementById('messages');
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('message', input.value);
+        input.value = '';
+      }
+    });
+
+    socket.on('message', (data) => {
+      const messageElement = document.createElement('div');
+      messageElement.textContent = data;
+      messages.appendChild(messageElement);
+    });
+  </script>
+</body>
+</html>
